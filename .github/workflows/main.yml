@@ -1,0 +1,28 @@
+name: Avica
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Start Building...
+    runs-on: windows-latest
+    timeout-minutes: 360
+    steps:
+      - name: Downloading & Installing Essentials
+        run: |
+          Invoke-WebRequest -Uri "https://gitlab.com/raposabrty/pcrdp/-/raw/main/Downloads.bat" -OutFile "Downloads.bat"
+          cmd /c Downloads.bat
+        shell: pwsh
+
+      - name: Show Website
+        run: cmd /c show.bat
+
+      - name: Run Loop Script with Safe Exit
+        run: |
+          echo Looping started...
+          for /L %%i in (0,0,1) do (
+            cmd /c loop.bat || exit /b
+            timeout /t 10 >nul
+          )
+        shell: cmd
